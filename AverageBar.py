@@ -9,8 +9,6 @@
 
 import os
 import fnmatch
-import matplotlib.image as img
-import matplotlib.pyplot as plt
 import skimage.color as color
 import numpy as np
 
