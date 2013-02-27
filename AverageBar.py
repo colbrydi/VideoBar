@@ -8,7 +8,8 @@
 # <codecell>
 
 import os
-import Image as img 
+import sys
+import Image as img
 import fnmatch
 import numpy as np
 import subprocess
@@ -21,19 +22,17 @@ def video2img(infile='/Volumes/Documents/colbrydi/Documents/DirksWork/2013 iCER 
     return filename
 
 def writeim(im,filename):
-    im = im.reshape(im.shape[0]*im.shape[1],im.shape[2])
-    if len(im[0]) == 3:
-        im = numpy.c_[im, 255*numpy.ones((len(im),1), numpy.uint8)]
-    im2 = Image.frombuffer('RGBA', size, arr.tostring(), 'raw', mode, 0,1)
+    #size = (im.shape[0], im.shape[1])
+    #im = im.reshape(im.shape[0]*im.shape[1],im.shape[2])
+    #im2 = img.frombuffer('RGB', size, im, 'raw', 'RGB', 0,1)
+    im2 = img.fromarray(np.uint8(im))
     im2.save(filename)
 
 def readim(filename):
+    print(filename)
     im = img.open(filename) 
-    print(im)
-    im2 = np.asarray(im.getdata())
-    print(im2)
-    print(im2.shape)
-    #im = img.imread(filename)
+    im2 = np.asarray(im)
+    #im2 = np.array(im.getdata()).reshape(im.size[0], im.size[1], 3)
     return im2;
     
 def AverageBar(indir='/Volumes/Documents/colbrydi/Documents/DirksWork/chamview/ChamB/'):
@@ -43,10 +42,10 @@ def AverageBar(indir='/Volumes/Documents/colbrydi/Documents/DirksWork/chamview/C
     B = np.array([0,0,0]);
     for root, dirs, filenames in os.walk(indir):
         for f in filenames:
-            if fnmatch.fnmatch(f,'*.png'):
+            if fnmatch.fnmatch(f,'*.jpeg'):
                 im = readim(os.path.join(root,f))
                 sz = im.shape[0]
-                #print(sz)
+                #print(im.shape)
                 r = np.zeros((sz,1))
                 g = np.zeros((sz,1))
                 b = np.zeros((sz,1))
@@ -73,9 +72,10 @@ def AverageBar(indir='/Volumes/Documents/colbrydi/Documents/DirksWork/chamview/C
 
 import time
 tic = time.time()
-im4 = AverageBar('video1')
+im4 = AverageBar(sys.argv[1])
 toc = time.time()
 print(toc-tic)
+writeim(im4, sys.argv[1]+'/AverageBar.jpeg')
 
 #x = '/Volumes/Documents/colbrydi/Documents/DirksWork/2013 iCER VIdeos/GlobusOnline/media/GlobusOnline.mp4'
 #im = AverageBar('./GlobusOnline/')

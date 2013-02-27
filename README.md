@@ -1,4 +1,4 @@
 VideoBar
 ========
 
-Video Barcode generator
+Video Barcode generator For the XSEDE LSVA project.
