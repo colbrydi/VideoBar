@@ -13,6 +13,7 @@ def AverageBar(indir='/Volumes/Documents/colbrydi/Documents/DirksWork/chamview/C
     G = np.array([0,0,0]);
     B = np.array([0,0,0]);
     for root, dirs, filenames in os.walk(indir):
+        filenames.sort()
         for f in filenames:
             if fnmatch.fnmatch(f,'0*.jpeg'):
                 im = readim(os.path.join(root,f))
