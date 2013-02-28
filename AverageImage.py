@@ -8,57 +8,40 @@
 # <codecell>
 
 import os
+import sys
 import fnmatch
-import matplotlib.image as img
-import matplotlib.pyplot as plt
-import skimage.color as color
+import Image as img
 import numpy as np
+from imIO import *
+
 
 def AverageImage(indir='/Volumes/Documents/colbrydi/Documents/DirksWork/chamview/ChamB/'):
     tot = 0.0;
     for root, dirs, filenames in os.walk(indir):
         for f in filenames:
-            if fnmatch.fnmatch(f,'*.png'):
-                im = img.imread(os.path.join(root,f))
+            if fnmatch.fnmatch(f,'0*.jpeg'):
+                im = readim(os.path.join(root,f))
                 if tot==0:
-                    R = im[:,:,0]
-                    G = im[:,:,1]
-                    B = im[:,:,2]
+                    R = np.double(im[:,:,0])
+                    G = np.double(im[:,:,1])
+                    B = np.double(im[:,:,2])
                 else:
-                    R = R+im[:,:,0]
-                    G = G+im[:,:,1]
-                    B = B+im[:,:,2]
+                    R = R+np.double(im[:,:,0])
+                    G = G+np.double(im[:,:,1])
+                    B = B+np.double(im[:,:,2])
                 tot=tot+1
-    im[:,:,0] = R/tot
-    im[:,:,1] = G/tot
-    im[:,:,2] = B/tot
-        
+    im = np.zeros((R.shape[0],R.shape[1], 3))
+    im[:,:,0] = (R/tot)
+    im[:,:,1] = (G/tot)
+    im[:,:,2] = (B/tot)
     return im
 
 # <codecell>
 
 import time
 tic = time.time()
-im4 = AverageImage()
+im = AverageImage(sys.argv[1])
 toc = time.time()
 print(toc-tic)
-
-# <codecell>
-
-plt.imshow(im4)
-
-# <codecell>
-
-x = '/Volumes/Documents/colbrydi/Documents/DirksWork/2013 iCER VIdeos/GlobusOnline/media/GlobusOnline.mp4'
-im = AverageImage('./GlobusOnline/')
-plt.imshow(im)
-
-# <codecell>
-
-x = '/Volumes/Documents/colbrydi/Documents/DirkArchive/2012/2012 Break Videos/HPCCUSB/media/HPCCUSB.mp4'
-im = AverageImage('./HPCCUSB/')
-plt.imshow(im)
-
-# <codecell>
-
+writeim(im, sys.argv[1]+'/AverageImage.jpeg')
 
